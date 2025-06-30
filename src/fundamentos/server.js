@@ -29,16 +29,37 @@ import http from "node:http";
 // GET /users => Buscando usuários do back-end
 // POST /users => Criando um usuário no back-end
 
+// Stateful vs Stateless
+
+// A principal diferença entre uma aplicação Stateful e uma Stateless está na forma como lidam com o estado (informações em memória).
+
+// Uma aplicação Stateful mantém dados em memória durante sua execução. Isso significa que ela depende dessas informações para funcionar corretamente. Se a aplicação for reiniciada ou cair, os dados que estavam na memória são perdidos, o que pode afetar seu funcionamento ou comportamento após ser reiniciada.
+
+// Já uma aplicação Stateless não armazena nenhum dado em memória entre as execuções. Ela salva qualquer informação necessária em fontes externas, como bancos de dados, arquivos ou serviços de cache persistente. Isso garante que, mesmo se a aplicação for interrompida e reiniciada, tudo continuará funcionando normalmente, pois o estado não depende da memória da aplicação em si.
+
+// JSON - JavaScript Object Notation
+
+// Cabeçalhos (Requisição/resposta) => Metadados
+
+const users = [];
+
 const server = http.createServer((req, res) => {
   const { method, url } = req;
 
-  console.log("Requisição recebida:", method, url);
   if (method === "GET" && url === "/users") {
     // Early return
-    return res.end("Listagem de usuários");
+    return res
+      .setHeader("Content-type", "application/json")
+      .end(JSON.stringify(users));
   }
 
   if (method === "POST" && url === "/users") {
+    users.push({
+      id: 1,
+      name: "John Doe",
+      email: "johndoe@example.com",
+    });
+
     return res.end("Criação de usuário");
   }
 
